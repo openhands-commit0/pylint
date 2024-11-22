@@ -58,7 +58,12 @@ def diff_string(old: float, new: float) -> str:
 
 def get_module_and_frameid(node: nodes.NodeNG) -> tuple[str, str]:
     """Return the module name and the frame id in the module."""
-    pass
+    frame = node.frame()
+    module = node.root()
+    name = module.name
+    if isinstance(frame, Module):
+        return name, '0'
+    return name, f"{frame.lineno}.{frame.column}"
 
 def get_rst_title(title: str, character: str) -> str:
     """Permit to get a title formatted as ReStructuredText test (underlined with a
