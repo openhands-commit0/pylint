@@ -35,7 +35,18 @@ T_GlobalOptionReturnTypes = TypeVar('T_GlobalOptionReturnTypes', bool, int, List
 
 def normalize_text(text: str, line_len: int=DEFAULT_LINE_LENGTH, indent: str='') -> str:
     """Wrap the text on the given line length."""
-    pass
+    lines = []
+    for line in text.splitlines():
+        if not line.strip():
+            lines.append(indent)
+            continue
+        # Wrap the line while preserving existing line breaks
+        wrapped_lines = textwrap.wrap(line, width=line_len - len(indent))
+        if wrapped_lines:
+            lines.extend(indent + line for line in wrapped_lines)
+        else:
+            lines.append(indent)
+    return '\n'.join(lines)
 CMPS = ['=', '-', '+']
 
 def diff_string(old: float, new: float) -> str:
