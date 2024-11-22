@@ -170,7 +170,8 @@ def _check_regexp_csv(value: list[str] | tuple[str] | str) -> Iterable[str]:
 
 def _comment(string: str) -> str:
     """Return string as a comment."""
-    pass
+    lines = [line.strip() for line in string.splitlines()]
+    return '# ' + '\n# '.join(lines)
 
 def _format_option_value(optdict: OptionDict, value: Any) -> str:
     """Return the user input's value from a 'compiled' value.
