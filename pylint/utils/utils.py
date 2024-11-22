@@ -200,7 +200,17 @@ def format_section(stream: TextIO, section: str, options: list[tuple[str, Option
 
 def _ini_format(stream: TextIO, options: list[tuple[str, OptionDict, Any]]) -> None:
     """Format options using the INI format."""
-    pass
+    for optname, optdict, value in options:
+        value = _format_option_value(optdict, value)
+        help_text = optdict.get('help')
+        if help_text:
+            help_text = _comment(help_text)
+            print(file=stream)
+            print(help_text, file=stream)
+        else:
+            print(file=stream)
+        if value:
+            print(f"{optname}={value}", file=stream)
 
 class IsortDriver:
     """A wrapper around isort API that changed between versions 4 and 5."""
