@@ -192,7 +192,11 @@ def _format_option_value(optdict: OptionDict, value: Any) -> str:
 
 def format_section(stream: TextIO, section: str, options: list[tuple[str, OptionDict, Any]], doc: str | None=None) -> None:
     """Format an option's section using the INI format."""
-    pass
+    if section:
+        print(f"[{section}]", file=stream)
+    if doc:
+        print(_comment(doc), file=stream)
+    _ini_format(stream, options)
 
 def _ini_format(stream: TextIO, options: list[tuple[str, OptionDict, Any]]) -> None:
     """Format options using the INI format."""
