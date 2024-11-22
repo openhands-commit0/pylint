@@ -94,7 +94,15 @@ def register_plugins(linter: PyLinter, directory: str) -> None:
     """Load all module and package in the given directory, looking for a
     'register' function in each one, used to register pylint checkers.
     """
-    pass
+    imported = {}
+    for filename in os.listdir(directory):
+        name, ext = os.path.splitext(filename)
+        if ext in PY_EXTS and name != '__pycache__':
+            module = modutils.load_module_from_file(os.path.join(directory, filename))
+            if module:
+                imported[name] = module
+                if hasattr(module, 'register'):
+                    module.register(linter)
 
 def _splitstrip(string: str, sep: str=',') -> list[str]:
     """Return a list of stripped string by splitting the string given as
