@@ -212,6 +212,35 @@ def _ini_format(stream: TextIO, options: list[tuple[str, OptionDict, Any]]) -> N
         if value:
             print(f"{optname}={value}", file=stream)
 
+def _check_csv(value: str | list[str] | tuple[str]) -> list[str]:
+    """Return a list of values from a comma-separated string."""
+    if isinstance(value, (list, tuple)):
+        return list(value)
+    return _splitstrip(value)
+
+def decoding_stream(stream: BufferedReader | BytesIO, encoding: str | None=None) -> TextIO:
+    """Return a decoding stream from a binary stream."""
+    if encoding is None:
+        try:
+            # Try to detect encoding using BOM or first few bytes
+            encoding = tokenize.detect_encoding(stream.readline)[0]
+            stream.seek(0)
+        except (SyntaxError, LookupError):
+            encoding = 'utf-8'
+    
+    try:
+        reader = codecs.getreader(encoding)(stream)
+    except LookupError:
+        # Unknown encoding, fallback to utf-8
+        reader = codecs.getreader('utf-8')(stream)
+    
+    return reader
+
+def tokenize_module(module: Module) -> list[tuple[int, str, tuple[int, int], tuple[int, int], str]]:
+    """Return the module tokens."""
+    with module.stream() as stream:
+        return list(tokenize.generate_tokens(stream.readline))
+
 class IsortDriver:
     """A wrapper around isort API that changed between versions 4 and 5."""
 
