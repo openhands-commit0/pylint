@@ -144,7 +144,29 @@ def _check_regexp_csv(value: list[str] | tuple[str] | str) -> Iterable[str]:
     """Split a comma-separated list of regexps, taking care to avoid splitting
     a regex employing a comma as quantifier, as in `\\d{1,2}`.
     """
-    pass
+    if isinstance(value, (list, tuple)):
+        return value
+    
+    # First, split on commas not inside curly braces
+    parts = []
+    current = []
+    brace_level = 0
+    
+    for char in value:
+        if char == '{':
+            brace_level += 1
+        elif char == '}':
+            brace_level -= 1
+        elif char == ',' and brace_level == 0:
+            parts.append(''.join(current))
+            current = []
+            continue
+        current.append(char)
+    
+    if current:
+        parts.append(''.join(current))
+    
+    return [part.strip() for part in parts if part.strip()]
 
 def _comment(string: str) -> str:
     """Return string as a comment."""
