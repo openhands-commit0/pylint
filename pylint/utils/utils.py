@@ -69,7 +69,7 @@ def get_rst_title(title: str, character: str) -> str:
     """Permit to get a title formatted as ReStructuredText test (underlined with a
     chosen character).
     """
-    pass
+    return f"{title}\n{character * len(title)}"
 
 def get_rst_section(section: str | None, options: list[tuple[str, OptionDict, Any]], doc: str | None=None) -> str:
     """Format an option's section using as a ReStructuredText formatted output."""
