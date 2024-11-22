@@ -178,7 +178,17 @@ def _format_option_value(optdict: OptionDict, value: Any) -> str:
 
     TODO: Refactor the code to not use this deprecated function
     """
-    pass
+    if isinstance(value, (list, tuple)):
+        value = ','.join(str(item) for item in value)
+    elif isinstance(value, dict):
+        value = ','.join(f"{k}:{v}" for k, v in value.items())
+    elif isinstance(value, Pattern):
+        value = value.pattern
+    elif value is None:
+        value = ''
+    elif isinstance(value, (bool, int, float)):
+        value = str(value).lower()
+    return str(value)
 
 def format_section(stream: TextIO, section: str, options: list[tuple[str, OptionDict, Any]], doc: str | None=None) -> None:
     """Format an option's section using the INI format."""
