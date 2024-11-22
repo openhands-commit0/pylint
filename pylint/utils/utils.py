@@ -124,7 +124,7 @@ def _splitstrip(string: str, sep: str=',') -> list[str]:
     :rtype: str or unicode
     :return: the unquoted string (or the input string if it wasn't quoted)
     """
-    pass
+    return [_unquote(s.strip()) for s in string.split(sep) if s.strip()]
 
 def _unquote(string: str) -> str:
     """Remove optional quotes (simple or double) from the string.
