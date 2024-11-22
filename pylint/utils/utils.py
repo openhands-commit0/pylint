@@ -73,7 +73,22 @@ def get_rst_title(title: str, character: str) -> str:
 
 def get_rst_section(section: str | None, options: list[tuple[str, OptionDict, Any]], doc: str | None=None) -> str:
     """Format an option's section using as a ReStructuredText formatted output."""
-    pass
+    result = []
+    if section:
+        result.append(get_rst_title(section, "="))
+    if doc:
+        result.extend(["", doc, ""])
+    for optname, optdict, value in options:
+        help_text = optdict.get('help', "").strip()
+        result.extend([
+            get_rst_title(optname, "-"),
+            "",
+            help_text or "No help available",
+            "",
+            f"Default: ``{_format_option_value(optdict, value)}``",
+            ""
+        ])
+    return "\n".join(result)
 
 def register_plugins(linter: PyLinter, directory: str) -> None:
     """Load all module and package in the given directory, looking for a
