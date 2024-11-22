@@ -51,7 +51,10 @@ CMPS = ['=', '-', '+']
 
 def diff_string(old: float, new: float) -> str:
     """Given an old and new value, return a string representing the difference."""
-    pass
+    diff = new - old
+    if diff == 0:
+        return '='
+    return f"{CMPS[1 if diff < 0 else 2]}{abs(diff):+.2f}"
 
 def get_module_and_frameid(node: nodes.NodeNG) -> tuple[str, str]:
     """Return the module name and the frame id in the module."""
