@@ -132,7 +132,13 @@ def _unquote(string: str) -> str:
     :param string: an optionally quoted string
     :return: the unquoted string (or the input string if it wasn't quoted)
     """
-    pass
+    if not string:
+        return string
+    if string[0] in '"\'':
+        string = string[1:]
+    if string and string[-1] in '"\'':
+        string = string[:-1]
+    return string
 
 def _check_regexp_csv(value: list[str] | tuple[str] | str) -> Iterable[str]:
     """Split a comma-separated list of regexps, taking care to avoid splitting
